@@ -1,0 +1,170 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Continuous integration for the monorepo. Path filters keep PRs cheap: the
+# firmware and app jobs only run when their tree actually changed. The
+# always-run `ci-success` aggregator is the single status to require in branch
+# protection, so skipped (path-filtered) jobs never block a merge.
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read # paths-filter reads the PR file list via the REST API
+    outputs:
+      firmware: ${{ steps.filter.outputs.firmware }}
+      app: ${{ steps.filter.outputs.app }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Detect changed areas
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            firmware:
+              - 'firmware/**'
+            app:
+              - 'app/**'
+
+  firmware-ci:
+    needs: changes
+    if: ${{ needs.changes.outputs.firmware == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust (stable, thumbv7m-none-eabi)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: thumbv7m-none-eabi
+          # clippy: the lint gate. llvm-tools: rust-objcopy for the size check.
+          components: clippy, llvm-tools
+
+      - name: Cache cargo registry + firmware target dir
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: firmware -> target
+          cache-bin: 'true'
+
+      - name: Install cargo-binutils (rust-objcopy)
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binutils
+
+      # The firmware's .cargo/config.toml is directory-scoped, so cargo runs
+      # from firmware/ (which also makes thumbv7m-none-eabi the default target).
+      - name: Build firmware (release)
+        working-directory: firmware
+        run: cargo build -p keeberry --release --target thumbv7m-none-eabi
+
+      - name: Clippy
+        working-directory: firmware
+        # Only the keeberry crate is linted; the generated pac
+        # dependency is compiled but not linted, so -D warnings is safe.
+        run: cargo clippy -p keeberry --release --target thumbv7m-none-eabi -- -D warnings
+
+      - name: Size check (image must fit the flash budget)
+        run: |
+          set -euo pipefail
+          rust-objcopy -O binary \
+            firmware/target/thumbv7m-none-eabi/release/keeberry keeberry.bin
+          # 0x1F800 = 129024 = 128 KiB flash minus the 2 KiB CONFIG_REGION;
+          # mirrors FLASH LENGTH in firmware/memory.x.
+          FLASH_BUDGET=129024
+          SIZE="$(stat -c%s keeberry.bin)"
+          echo "firmware image: ${SIZE} bytes (budget ${FLASH_BUDGET} = 0x1F800)"
+          if [ "${SIZE}" -gt "${FLASH_BUDGET}" ]; then
+            echo "::error::firmware image ${SIZE} B exceeds the ${FLASH_BUDGET} B flash budget (0x1F800)"
+            exit 1
+          fi
+
+  app-ci:
+    needs: changes
+    if: ${{ needs.changes.outputs.app == 'true' }}
+    # macOS-first: the Tauri webview/native libs (webkit2gtk et al.) are provided
+    # by the OS here, so `cargo check` of src-tauri needs no apt setup. A Linux
+    # runner would have to apt-install the webkit2gtk/libsoup dev packages first.
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install Rust (host)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + src-tauri target dir
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri -> target
+          cache-bin: 'true'
+
+      - name: Install npm dependencies
+        working-directory: app
+        run: npm ci
+
+      # `npm run build` must precede `cargo check`: tauri::generate_context!
+      # embeds the frontendDist (../dist) at compile time, so the dist/ output
+      # has to exist before the Rust shell is checked.
+      - name: Build web app
+        working-directory: app
+        run: npm run build
+
+      - name: Test
+        working-directory: app
+        run: npm test
+
+      - name: Lint (eslint)
+        working-directory: app
+        run: npm run lint
+
+      - name: Format check (prettier)
+        working-directory: app
+        run: npx prettier --check .
+
+      - name: Protocol drift check
+        working-directory: app
+        # Hard gate: fails the build if the app's kcp codec drifts from the
+        # firmware's protocol contract (kcp protocol/codegen drift check).
+        run: npm run check:protocol
+
+      - name: Check Tauri shell (cargo check)
+        working-directory: app/src-tauri
+        run: cargo check
+
+  # Always runs. Branch protection should require ONLY this check: it passes when
+  # every needed job either succeeded or was skipped by the path filter, and
+  # fails if any needed job failed or was cancelled.
+  ci-success:
+    needs: [changes, firmware-ci, app-ci]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify no required job failed
+        run: |
+          set -euo pipefail
+          if ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}; then
+            echo "::error::a required CI job failed or was cancelled"
+            exit 1
+          fi
+          echo "All required CI jobs passed or were skipped."

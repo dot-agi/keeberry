@@ -1,0 +1,98 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# App release: build the keeberry Tauri desktop app (macOS) and publish a draft
+# GitHub Release with the bundled installers.
+#
+# `paths:` filters are IGNORED on tag pushes, so this is keyed on the `app-v*`
+# tag prefix (distinct from the firmware's `fw-v*`). Tag e.g. `app-v0.1.0`.
+#
+# macOS-first for now. The cross-platform matrix (a `strategy.matrix` over
+# `macos-latest` / `ubuntu-latest` / `windows-latest`, with the Linux runner
+# additionally apt-installing the webkit2gtk/libsoup build deps) is a documented
+# future addition — see .github/RELEASING.md.
+name: app-release
+
+on:
+  push:
+    tags:
+      - 'app-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install npm dependencies
+        working-directory: app
+        run: npm ci
+
+      - name: Install Rust (host + thumbv7m-none-eabi)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          # The host target builds the Tauri shell. thumbv7m-none-eabi + the
+          # llvm-tools component are for the firmware-staging step below, which
+          # cross-compiles the firmware FROM THIS COMMIT and rust-objcopy's it
+          # into a `.bin` that gets bundled as a Tauri resource — so the shipped
+          # app always carries a firmware image built from the same source.
+          targets: thumbv7m-none-eabi
+          components: llvm-tools
+
+      - name: Cache cargo registry + src-tauri target dir
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: app/src-tauri -> target
+          cache-bin: 'true'
+
+      - name: Install cargo-binutils (rust-objcopy for the bundled firmware .bin)
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binutils
+
+      # tauri-action invokes the tauri CLI directly, so it runs only the
+      # config's `beforeBuildCommand` (web build) — never the npm `pretauri:build`
+      # hook. Stage the firmware image explicitly here so the bundle's required
+      # `resources/keeberry.bin` + `firmware.json` exist before tauri-action runs.
+      - name: Stage bundled firmware image
+        working-directory: app
+        run: npm run stage:firmware
+
+      - name: Build app and publish draft release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Ad-hoc signing (pseudo-identity "-"). Without ANY signature, an
+          # Apple-Silicon Mac flags a notarization-less download as "damaged" and
+          # refuses to open it; an ad-hoc signature avoids that (the user still
+          # has to allow it once under Privacy & Security). No Apple secrets are
+          # needed for this.
+          #
+          # ---- Developer-ID signing + notarization (add later) --------------
+          # Drop the line above and supply these repo secrets to ship a properly
+          # signed, notarized, Gatekeeper-clean build (tauri-action consumes them
+          # directly; it imports APPLE_CERTIFICATE into a temporary keychain):
+          #   APPLE_CERTIFICATE          # base64 of the Developer-ID .p12
+          #   APPLE_CERTIFICATE_PASSWORD # .p12 export password
+          #   APPLE_SIGNING_IDENTITY     # "Developer ID Application: … (TEAMID)"
+          # plus, for notarization, EITHER an App Store Connect API key
+          #   (APPLE_API_ISSUER / APPLE_API_KEY / APPLE_API_KEY_PATH)
+          # OR an Apple ID
+          #   (APPLE_ID / APPLE_PASSWORD <app-specific> / APPLE_TEAM_ID).
+          APPLE_SIGNING_IDENTITY: '-'
+        with:
+          projectPath: app
+          # tauri-action substitutes __VERSION__ with the app version from
+          # tauri.conf.json (0.1.0), yielding the same app-v0.1.0 tag we pushed.
+          tagName: app-v__VERSION__
+          releaseName: 'keeberry v__VERSION__'
+          releaseDraft: true

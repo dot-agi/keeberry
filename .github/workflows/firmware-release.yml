@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+# Firmware release: build the keeberry firmware for the WB32FQ95 and publish the
+# flashable `.bin` (plus a sha256 sidecar) to a GitHub Release.
+#
+# `paths:` filters are IGNORED on tag pushes, so firmware and app releases are
+# keyed on DISTINCT tag prefixes instead: this workflow fires only on `fw-v*`.
+# Tag the firmware as e.g. `fw-v0.1.0` to cut a release.
+name: firmware-release
+
+on:
+  push:
+    tags:
+      - 'fw-v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust (stable, thumbv7m-none-eabi)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: thumbv7m-none-eabi
+          # llvm-tools backs cargo-binutils' rust-objcopy (ELF -> raw .bin).
+          components: llvm-tools
+
+      - name: Cache cargo registry + firmware target dir
+        uses: Swatinem/rust-cache@v2
+        with:
+          # The firmware is a workspace rooted at firmware/; its build artifacts
+          # land in firmware/target.
+          workspaces: firmware -> target
+          cache-bin: 'true'
+
+      - name: Install cargo-binutils (rust-objcopy)
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binutils
+
+      - name: Build, size-gate and package the firmware image
+        id: package
+        run: |
+          set -euo pipefail
+          # Strip the `fw-v` tag prefix to get the bare version (fw-v0.1.0 -> 0.1.0).
+          VERSION="${GITHUB_REF_NAME#fw-v}"
+          BIN="keeberry-${VERSION}.bin"
+
+          # The firmware's .cargo/config.toml is directory-scoped (it pins the
+          # thumbv7m target + the link args), so cargo must run from firmware/.
+          ( cd firmware && cargo build -p keeberry --release --target thumbv7m-none-eabi )
+
+          # Flatten the ELF to the raw image that gets written to flash.
+          rust-objcopy -O binary \
+            firmware/target/thumbv7m-none-eabi/release/keeberry "${BIN}"
+
+          # Flash budget: the main flash is 128 KiB, but the top 2 KiB are the
+          # CONFIG_REGION persistence window. So the loadable image (text+data,
+          # which is exactly what a raw `-O binary` dump contains) must fit in
+          # 0x1F800 = 129024 bytes. This mirrors FLASH LENGTH in
+          # firmware/memory.x; keep the two in lockstep. The linker
+          # would already reject an over-budget image, but this gate also fails
+          # CI early and documents the invariant.
+          FLASH_BUDGET=129024
+          SIZE="$(stat -c%s "${BIN}")"
+          echo "firmware image: ${SIZE} bytes (budget ${FLASH_BUDGET} = 0x1F800)"
+          if [ "${SIZE}" -gt "${FLASH_BUDGET}" ]; then
+            echo "::error::firmware image ${SIZE} B exceeds the ${FLASH_BUDGET} B flash budget (0x1F800)"
+            exit 1
+          fi
+
+          # Integrity sidecar so downloaders can verify the image.
+          sha256sum "${BIN}" > "${BIN}.sha256"
+
+          echo "bin=${BIN}" >> "${GITHUB_OUTPUT}"
+          echo "sha=${BIN}.sha256" >> "${GITHUB_OUTPUT}"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # Tag defaults to github.ref_name (the pushed fw-v* tag).
+          files: |
+            ${{ steps.package.outputs.bin }}
+            ${{ steps.package.outputs.sha }}
+          fail_on_unmatched_files: true
+          generate_release_notes: true

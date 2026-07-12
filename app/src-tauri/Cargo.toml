@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+[package]
+name = "keeberry"
+version = "0.1.0"
+description = "keeberry native configurator — a Tauri shell around the kcp web app with a Rust HID bridge."
+edition = "2021"
+license = "GPL-2.0-or-later"
+# This is a HOST-target desktop crate. It is deliberately outside the firmware/
+# workspace (whose .cargo/config.toml pins thumbv7m-none-eabi); cargo finds no
+# ancestor workspace or .cargo config here, so it builds for the host triple.
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# hidapi-rs: the native HID path. macOS's WKWebView has no WebHID, so the same
+# React app reaches the keyboard through these bindings instead.
+hidapi = "2"
+# tauri-plugin-shell runs the bundled wb32-dfu-updater_cli `externalBin` sidecar
+# (the flasher). The flash commands invoke it from Rust — not from the webview —
+# so its execute permission is never granted to the web layer (see flash.rs).
+tauri-plugin-shell = "2"
+# Async sleep for the DFU-device poll loop in flash.rs; this is tauri's own
+# runtime, so it adds no new async stack — just the `time` feature we name.
+tokio = { version = "1", features = ["time"] }

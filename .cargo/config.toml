@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Repo-root cargo config: the `cargo xtask` alias (matklad's cargo-xtask pattern).
+# It lives here, NOT in `firmware/.cargo/config.toml`, on purpose: that config pins
+# `target = thumbv7m-none-eabi` for the firmware, and xtask is a host tool. Invoked
+# from the repo root (where there is no default embedded target), `cargo xtask` builds
+# for the host; `--manifest-path` lets it resolve the standalone xtask crate from here.
+[alias]
+xtask = "run --quiet --manifest-path xtask/Cargo.toml --"

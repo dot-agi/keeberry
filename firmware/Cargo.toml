@@ -1,0 +1,95 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+[package]
+name = "keeberry"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-2.0-or-later"
+description = "Open firmware for the Akko 5075B (Westberry WB32FQ95)"
+
+[workspace]
+resolver = "2"
+members = ["pac"]
+
+# Compile-time behaviour plugins (see `features::FEATURES`). Default-on so a stock build
+# ships them; a minimal build can drop any with `--no-default-features` + an explicit list,
+# removing its module, registry entry and flash entirely.
+[features]
+default = ["caps_word", "key_lock", "repeat_key", "one_shot_mod", "autocorrect", "unicode"]
+caps_word = []
+key_lock = []
+repeat_key = []
+one_shot_mod = []
+autocorrect = []
+unicode = []
+# @scaffold:cargo-feature — `just new-feature <Name>` inserts a new plugin's `<name> = []`
+# gate here and adds `"<name>"` to `default` above.
+
+[dependencies]
+pac = { path = "pac", features = ["rt", "critical-section"] }
+cortex-m = { version = "0.7", features = ["critical-section-single-core"] }
+# The `device` feature makes cortex-m-rt defer the interrupt vector table to the
+# PAC (which provides `__INTERRUPTS`), avoiding a duplicate-symbol link error.
+cortex-m-rt = { version = "0.7", features = ["device"] }
+critical-section = "1.2"
+
+# embassy async runtime + time. Versions are pinned to match RMK v0.8.2
+# (rmk/Cargo.toml @ tag rmk-v0.8.2), which we adopt as the keyboard framework:
+# embassy-executor 0.9, embassy-time 0.5, embassy-sync 0.7. The transitive
+# embassy-time-driver 0.2 and embassy-time-queue-utils 0.3 are pinned directly
+# because `time_driver` implements the driver against them.
+embassy-executor = { version = "0.9", features = [
+    "arch-cortex-m",
+    "executor-thread",
+    "defmt",
+] }
+embassy-time = { version = "0.5", features = ["defmt", "tick-hz-1_000_000"] }
+embassy-time-driver = "0.2"
+embassy-time-queue-utils = "0.3"
+embassy-sync = "0.7"
+# `join` runs the USB device and the keyboard report loop concurrently on the
+# single USB task. Already in the tree transitively via embassy-usb; pinned here
+# because `usb` names it directly.
+embassy-futures = "0.1"
+
+# USB device stack. The WB32FQ95's USB controller is a Mentor-MUSB core, driven
+# through `musb` (the dot-agi fork, which carries a `builtin-wb32fq95` register
+# profile). `musb` implements `embassy-usb-driver` 0.2, so the versions are
+# pinned in lockstep with embassy-usb 0.5:
+#   embassy-usb 0.5  -> embassy-usb-driver ^0.2, embassy-sync ^0.7, usbd-hid ^0.8
+# embassy-usb 0.6 is deliberately avoided (it needs embassy-sync 0.8). usbd-hid
+# 0.8 is the same minor embassy-usb 0.5 depends on, so the HID descriptor types
+# unify on a single copy.
+musb = { git = "https://github.com/dot-agi/musb", rev = "28961a7035678dcec842666cb5a12906550b650a", default-features = false, features = [
+    "builtin-wb32fq95",
+    "embassy-usb-driver-impl",
+    "prebuild",
+] }
+embassy-usb = "0.5.0"
+embassy-usb-driver = "0.2.0"
+usbd-hid = "0.8"
+
+# defmt is bumped from 0.3 to 1.0 to match the embassy/RMK stack: embassy-* at
+# these versions require defmt 1.0, and a defmt major mismatch fails to link.
+# defmt 1.0 is API-compatible with 0.3.
+defmt = "1.0"
+defmt-rtt = "1.0"
+panic-probe = { version = "1.0", features = ["print-defmt"] }
+
+# Profiles live at the workspace root (this manifest); Cargo ignores `[profile.*]`
+# in non-root members. These apply to the `keeberry` firmware binary.
+[profile.release]
+debug = 2
+lto = true
+opt-level = "s"
+
+# The flashing target is the RELEASE build (`-Os` + LTO), which fits the 128 KB
+# flash of the WB32FQ95 `xB` die with headroom. The `keeberry` crate is kept at
+# the lightest optimization that still preserves line-level step-debug
+# (`opt-level = 1`); the dependencies (the embassy/USB stack) are size-optimized
+# below. The dev profile carries full debuginfo and is a step-debug build, not a
+# size-constrained flashing target.
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = "s"

@@ -1,0 +1,1241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SPDX-License-Identifier: GPL-2.0-or-later -->
+<device schemaVersion="1.3" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="CMSIS-SVD.xsd">
+  <vendor>Westberry</vendor>
+  <name>WB32FQ95</name>
+  <version>0.1</version>
+  <description>Westberry WB32FQ95 (ARM Cortex-M3)</description>
+  <cpu>
+    <name>CM3</name>
+    <revision>r2p1</revision>
+    <endian>little</endian>
+    <mpuPresent>true</mpuPresent>
+    <fpuPresent>false</fpuPresent>
+    <nvicPrioBits>4</nvicPrioBits>
+    <vendorSystickConfig>false</vendorSystickConfig>
+  </cpu>
+  <addressUnitBits>8</addressUnitBits>
+  <width>32</width>
+  <size>32</size>
+  <access>read-write</access>
+  <resetValue>0x00000000</resetValue>
+  <resetMask>0xFFFFFFFF</resetMask>
+  <peripherals>
+
+    <peripheral>
+      <name>GPIOA</name>
+      <description>General-purpose I/O port A</description>
+      <baseAddress>0x40000000</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>MODER</name>
+          <description>Port mode register</description>
+          <addressOffset>0x00</addressOffset>
+        </register>
+        <register>
+          <name>OTYPER</name>
+          <description>Port output type register</description>
+          <addressOffset>0x04</addressOffset>
+        </register>
+        <register>
+          <name>OSPEEDR</name>
+          <description>Port output speed register</description>
+          <addressOffset>0x08</addressOffset>
+        </register>
+        <register>
+          <name>PUPDR</name>
+          <description>Port pull-up/pull-down register</description>
+          <addressOffset>0x0C</addressOffset>
+        </register>
+        <register>
+          <name>IDR</name>
+          <description>Port input data register</description>
+          <addressOffset>0x10</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>ODR</name>
+          <description>Port output data register</description>
+          <addressOffset>0x14</addressOffset>
+        </register>
+        <register>
+          <name>BSRR</name>
+          <description>Port bit set/reset register</description>
+          <addressOffset>0x18</addressOffset>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>LCKR</name>
+          <description>Port configuration lock register</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>AFRL</name>
+          <description>Alternate function low register</description>
+          <addressOffset>0x20</addressOffset>
+        </register>
+        <register>
+          <name>AFRH</name>
+          <description>Alternate function high register</description>
+          <addressOffset>0x24</addressOffset>
+        </register>
+        <register>
+          <name>SMIT</name>
+          <description>Port Schmitt-trigger input configuration register (vendor extension)</description>
+          <addressOffset>0x28</addressOffset>
+        </register>
+        <register>
+          <name>CURRENT</name>
+          <description>Port drive-current configuration register (vendor extension)</description>
+          <addressOffset>0x2C</addressOffset>
+        </register>
+        <register>
+          <name>CFGMSK</name>
+          <description>Port per-pin configuration write-mask register (vendor extension)</description>
+          <addressOffset>0x30</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral derivedFrom="GPIOA">
+      <name>GPIOB</name>
+      <description>General-purpose I/O port B</description>
+      <baseAddress>0x40000400</baseAddress>
+    </peripheral>
+
+    <peripheral derivedFrom="GPIOA">
+      <name>GPIOC</name>
+      <description>General-purpose I/O port C</description>
+      <baseAddress>0x40000800</baseAddress>
+    </peripheral>
+
+    <peripheral derivedFrom="GPIOA">
+      <name>GPIOD</name>
+      <description>General-purpose I/O port D</description>
+      <baseAddress>0x40000C00</baseAddress>
+    </peripheral>
+
+    <peripheral>
+      <name>PWR</name>
+      <description>Power control. ANAKEY1/ANAKEY2 unlock write access to the ANCTL block.</description>
+      <baseAddress>0x40010000</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>CR0</name>
+          <description>Control register 0</description>
+          <addressOffset>0x00</addressOffset>
+        </register>
+        <register>
+          <name>CR1</name>
+          <description>Control register 1</description>
+          <addressOffset>0x04</addressOffset>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>CR2</name>
+          <description>Control register 2</description>
+          <addressOffset>0x08</addressOffset>
+        </register>
+        <register>
+          <name>SR0</name>
+          <description>Status register 0</description>
+          <addressOffset>0x10</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>SR1</name>
+          <description>Status register 1</description>
+          <addressOffset>0x14</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>GPREG0</name>
+          <description>General-purpose register 0</description>
+          <addressOffset>0x18</addressOffset>
+        </register>
+        <register>
+          <name>GPREG1</name>
+          <description>General-purpose register 1</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>CFGR</name>
+          <description>Configuration register</description>
+          <addressOffset>0x20</addressOffset>
+        </register>
+        <register>
+          <name>ANAKEY1</name>
+          <description>ANCTL write-enable key register 1</description>
+          <addressOffset>0x28</addressOffset>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>ANAKEY2</name>
+          <description>ANCTL write-enable key register 2</description>
+          <addressOffset>0x2C</addressOffset>
+          <access>write-only</access>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral>
+      <name>ANCTL</name>
+      <description>Analog control block (holds HSE and PLL control). Write access is gated by PWR.ANAKEY1/ANAKEY2.</description>
+      <baseAddress>0x40010400</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>BGCR2</name>
+          <description>Bandgap control register 2</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>MHSIENR</name>
+          <description>MHSI oscillator enable register</description>
+          <addressOffset>0x2C</addressOffset>
+        </register>
+        <register>
+          <name>MHSISR</name>
+          <description>MHSI oscillator status register</description>
+          <addressOffset>0x30</addressOffset>
+        </register>
+        <register>
+          <name>FHSIENR</name>
+          <description>FHSI oscillator enable register</description>
+          <addressOffset>0x38</addressOffset>
+        </register>
+        <register>
+          <name>FHSISR</name>
+          <description>FHSI oscillator status register</description>
+          <addressOffset>0x3C</addressOffset>
+        </register>
+        <register>
+          <name>LSIENR</name>
+          <description>LSI oscillator enable register</description>
+          <addressOffset>0x44</addressOffset>
+        </register>
+        <register>
+          <name>LSISR</name>
+          <description>LSI oscillator status register</description>
+          <addressOffset>0x48</addressOffset>
+        </register>
+        <register>
+          <name>HSECR0</name>
+          <description>HSE control register 0</description>
+          <addressOffset>0x4C</addressOffset>
+        </register>
+        <register>
+          <name>HSECR1</name>
+          <description>HSE control register 1</description>
+          <addressOffset>0x50</addressOffset>
+        </register>
+        <register>
+          <name>HSESR</name>
+          <description>HSE status register</description>
+          <addressOffset>0x58</addressOffset>
+        </register>
+        <register>
+          <name>PLLCR</name>
+          <description>PLL control register</description>
+          <addressOffset>0x74</addressOffset>
+        </register>
+        <register>
+          <name>PLLENR</name>
+          <description>PLL enable register</description>
+          <addressOffset>0x78</addressOffset>
+        </register>
+        <register>
+          <name>PLLSR</name>
+          <description>PLL status register</description>
+          <addressOffset>0x7C</addressOffset>
+        </register>
+        <register>
+          <name>PVDCR</name>
+          <description>Programmable voltage detector control register</description>
+          <addressOffset>0x80</addressOffset>
+        </register>
+        <register>
+          <name>PVDENR</name>
+          <description>Programmable voltage detector enable register</description>
+          <addressOffset>0x84</addressOffset>
+        </register>
+        <register>
+          <name>SARENR</name>
+          <description>SAR ADC enable register</description>
+          <addressOffset>0x8C</addressOffset>
+        </register>
+        <register>
+          <name>USBPCR</name>
+          <description>USB PHY control register</description>
+          <addressOffset>0x90</addressOffset>
+        </register>
+        <register>
+          <name>PORCR</name>
+          <description>Power-on reset control register</description>
+          <addressOffset>0x94</addressOffset>
+        </register>
+        <register>
+          <name>CMPACR</name>
+          <description>Comparator A control register</description>
+          <addressOffset>0x98</addressOffset>
+        </register>
+        <register>
+          <name>CMPBCR</name>
+          <description>Comparator B control register</description>
+          <addressOffset>0x9C</addressOffset>
+        </register>
+        <register>
+          <name>ISR</name>
+          <description>Interrupt status register</description>
+          <addressOffset>0xA0</addressOffset>
+        </register>
+        <register>
+          <name>IER</name>
+          <description>Interrupt enable register</description>
+          <addressOffset>0xA4</addressOffset>
+        </register>
+        <register>
+          <name>ICR</name>
+          <description>Interrupt clear register</description>
+          <addressOffset>0xA8</addressOffset>
+        </register>
+        <register>
+          <name>CMPASR</name>
+          <description>Comparator A status register</description>
+          <addressOffset>0xAC</addressOffset>
+        </register>
+        <register>
+          <name>CMPBSR</name>
+          <description>Comparator B status register</description>
+          <addressOffset>0xB0</addressOffset>
+        </register>
+        <register>
+          <name>DCSSENR</name>
+          <description>Clock security system enable register</description>
+          <addressOffset>0xB4</addressOffset>
+        </register>
+        <register>
+          <name>DCSSCR</name>
+          <description>Clock security system control register</description>
+          <addressOffset>0xB8</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral>
+      <name>RCC</name>
+      <description>Reset and clock control</description>
+      <baseAddress>0x40010C00</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <interrupt>
+        <name>WWDG</name>
+        <description>Window watchdog interrupt</description>
+        <value>0</value>
+      </interrupt>
+      <interrupt>
+        <name>PVD</name>
+        <description>PVD through EXTI line detection interrupt</description>
+        <value>1</value>
+      </interrupt>
+      <interrupt>
+        <name>TAMPER</name>
+        <description>Tamper interrupt</description>
+        <value>2</value>
+      </interrupt>
+      <interrupt>
+        <name>RTC</name>
+        <description>RTC global interrupt</description>
+        <value>3</value>
+      </interrupt>
+      <interrupt>
+        <name>FMC</name>
+        <description>FMC global interrupt</description>
+        <value>4</value>
+      </interrupt>
+      <interrupt>
+        <name>RCC</name>
+        <description>RCC global interrupt</description>
+        <value>5</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI0</name>
+        <description>EXTI line 0 interrupt</description>
+        <value>6</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI1</name>
+        <description>EXTI line 1 interrupt</description>
+        <value>7</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI2</name>
+        <description>EXTI line 2 interrupt</description>
+        <value>8</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI3</name>
+        <description>EXTI line 3 interrupt</description>
+        <value>9</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI4</name>
+        <description>EXTI line 4 interrupt</description>
+        <value>10</value>
+      </interrupt>
+      <interrupt>
+        <name>DMAC1</name>
+        <description>DMAC1 global interrupt</description>
+        <value>11</value>
+      </interrupt>
+      <interrupt>
+        <name>DMAC2</name>
+        <description>DMAC2 global interrupt</description>
+        <value>12</value>
+      </interrupt>
+      <interrupt>
+        <name>ADC</name>
+        <description>ADC global interrupt</description>
+        <value>13</value>
+      </interrupt>
+      <interrupt>
+        <name>USB</name>
+        <description>USB global interrupt</description>
+        <value>14</value>
+      </interrupt>
+      <interrupt>
+        <name>USB_DMA</name>
+        <description>USB DMA interrupt</description>
+        <value>15</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI9_5</name>
+        <description>EXTI line[9:5] interrupts</description>
+        <value>16</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM1_BRK</name>
+        <description>TIM1 break interrupt</description>
+        <value>17</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM1_UP</name>
+        <description>TIM1 update interrupt</description>
+        <value>18</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM1_TRG_COM</name>
+        <description>TIM1 trigger and commutation interrupt</description>
+        <value>19</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM1_CC</name>
+        <description>TIM1 capture/compare interrupt</description>
+        <value>20</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM2</name>
+        <description>TIM2 global interrupt</description>
+        <value>21</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM3</name>
+        <description>TIM3 global interrupt</description>
+        <value>22</value>
+      </interrupt>
+      <interrupt>
+        <name>TIM4</name>
+        <description>TIM4 global interrupt</description>
+        <value>23</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C1</name>
+        <description>I2C1 global interrupt</description>
+        <value>24</value>
+      </interrupt>
+      <interrupt>
+        <name>I2C2</name>
+        <description>I2C2 global interrupt</description>
+        <value>25</value>
+      </interrupt>
+      <interrupt>
+        <name>QSPI</name>
+        <description>QSPI global interrupt</description>
+        <value>26</value>
+      </interrupt>
+      <interrupt>
+        <name>SPIM2</name>
+        <description>SPIM2 global interrupt</description>
+        <value>27</value>
+      </interrupt>
+      <interrupt>
+        <name>SPIS1</name>
+        <description>SPIS1 global interrupt</description>
+        <value>28</value>
+      </interrupt>
+      <interrupt>
+        <name>SPIS2</name>
+        <description>SPIS2 global interrupt</description>
+        <value>29</value>
+      </interrupt>
+      <interrupt>
+        <name>UART1</name>
+        <description>UART1 global interrupt</description>
+        <value>30</value>
+      </interrupt>
+      <interrupt>
+        <name>UART2</name>
+        <description>UART2 global interrupt</description>
+        <value>31</value>
+      </interrupt>
+      <interrupt>
+        <name>UART3</name>
+        <description>UART3 global interrupt</description>
+        <value>32</value>
+      </interrupt>
+      <interrupt>
+        <name>EXTI15_10</name>
+        <description>EXTI line[15:10] interrupts</description>
+        <value>33</value>
+      </interrupt>
+      <interrupt>
+        <name>RTCAlarm</name>
+        <description>RTC alarm through EXTI line interrupt</description>
+        <value>34</value>
+      </interrupt>
+      <interrupt>
+        <name>USBP_WKUP</name>
+        <description>USB pin wake-up global interrupt</description>
+        <value>35</value>
+      </interrupt>
+      <interrupt>
+        <name>I2S</name>
+        <description>I2S global interrupt</description>
+        <value>36</value>
+      </interrupt>
+      <registers>
+        <register>
+          <name>PLLPRE</name>
+          <description>PLL prescaler register</description>
+          <addressOffset>0x00</addressOffset>
+        </register>
+        <register>
+          <name>PLLSRC</name>
+          <description>PLL source register</description>
+          <addressOffset>0x04</addressOffset>
+        </register>
+        <register>
+          <name>MAINCLKSRC</name>
+          <description>Main clock source register</description>
+          <addressOffset>0x08</addressOffset>
+        </register>
+        <register>
+          <name>MAINCLKUEN</name>
+          <description>Main clock update enable register</description>
+          <addressOffset>0x0C</addressOffset>
+        </register>
+        <register>
+          <name>USBPRE</name>
+          <description>USB prescaler register</description>
+          <addressOffset>0x14</addressOffset>
+        </register>
+        <register>
+          <name>AHBPRE</name>
+          <description>AHB prescaler register</description>
+          <addressOffset>0x18</addressOffset>
+        </register>
+        <register>
+          <name>APB1PRE</name>
+          <description>APB1 prescaler register</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>APB2PRE</name>
+          <description>APB2 prescaler register</description>
+          <addressOffset>0x20</addressOffset>
+        </register>
+        <register>
+          <name>MCLKPRE</name>
+          <description>MCLK prescaler register</description>
+          <addressOffset>0x24</addressOffset>
+        </register>
+        <register>
+          <name>I2SPRE</name>
+          <description>I2S prescaler register</description>
+          <addressOffset>0x28</addressOffset>
+        </register>
+        <register>
+          <name>MCLKSRC</name>
+          <description>MCLK source register</description>
+          <addressOffset>0x2C</addressOffset>
+        </register>
+        <register>
+          <name>USBFIFOCLKSRC</name>
+          <description>USB FIFO clock source register</description>
+          <addressOffset>0x34</addressOffset>
+        </register>
+        <register>
+          <name>MCOSEL</name>
+          <description>Microcontroller clock output select register</description>
+          <addressOffset>0x38</addressOffset>
+        </register>
+        <register>
+          <name>AHBENR0</name>
+          <description>AHB peripheral clock enable register 0</description>
+          <addressOffset>0x3C</addressOffset>
+        </register>
+        <register>
+          <name>AHBENR1</name>
+          <description>AHB peripheral clock enable register 1</description>
+          <addressOffset>0x40</addressOffset>
+        </register>
+        <register>
+          <name>AHBENR2</name>
+          <description>AHB peripheral clock enable register 2</description>
+          <addressOffset>0x44</addressOffset>
+        </register>
+        <register>
+          <name>APB1ENR</name>
+          <description>APB1 peripheral clock enable register</description>
+          <addressOffset>0x48</addressOffset>
+        </register>
+        <register>
+          <name>APB2ENR</name>
+          <description>APB2 peripheral clock enable register</description>
+          <addressOffset>0x4C</addressOffset>
+        </register>
+        <register>
+          <name>RNGCLKENR</name>
+          <description>RNG clock enable register</description>
+          <addressOffset>0x5C</addressOffset>
+        </register>
+        <register>
+          <name>PCLKENR</name>
+          <description>Panel PCLK clock enable register</description>
+          <addressOffset>0x60</addressOffset>
+        </register>
+        <register>
+          <name>IWDGCLKENR</name>
+          <description>Independent watchdog clock enable register</description>
+          <addressOffset>0x64</addressOffset>
+        </register>
+        <register>
+          <name>USBCLKENR</name>
+          <description>USB clock enable register</description>
+          <addressOffset>0x6C</addressOffset>
+        </register>
+        <register>
+          <name>I2SCLKENR</name>
+          <description>I2S SCLK enable register</description>
+          <addressOffset>0x70</addressOffset>
+        </register>
+        <register>
+          <name>SPIS1CLKENR</name>
+          <description>SPIS1 clock enable register</description>
+          <addressOffset>0x74</addressOffset>
+        </register>
+        <register>
+          <name>SPIS2CLKENR</name>
+          <description>SPIS2 clock enable register</description>
+          <addressOffset>0x78</addressOffset>
+        </register>
+        <register>
+          <name>USBFIFOCLKENR</name>
+          <description>USB FIFO clock enable register</description>
+          <addressOffset>0x7C</addressOffset>
+        </register>
+        <register>
+          <name>AHBRSTR1</name>
+          <description>AHB peripheral reset register 1</description>
+          <addressOffset>0x88</addressOffset>
+        </register>
+        <register>
+          <name>APB1RSTR</name>
+          <description>APB1 peripheral reset register</description>
+          <addressOffset>0x90</addressOffset>
+        </register>
+        <register>
+          <name>APB2RSTR</name>
+          <description>APB2 peripheral reset register</description>
+          <addressOffset>0x94</addressOffset>
+        </register>
+        <register>
+          <name>I2SCLKRSTR</name>
+          <description>I2S SCLK reset register</description>
+          <addressOffset>0xB8</addressOffset>
+        </register>
+        <register>
+          <name>CLRRSTSTAT</name>
+          <description>Clear reset status register</description>
+          <addressOffset>0xC8</addressOffset>
+        </register>
+        <register>
+          <name>BDRSTR</name>
+          <description>Battery domain reset register</description>
+          <addressOffset>0xD4</addressOffset>
+        </register>
+        <register>
+          <name>LSI2RTCENR</name>
+          <description>LSI-to-RTC clock enable register</description>
+          <addressOffset>0xD8</addressOffset>
+        </register>
+        <register>
+          <name>HSE2RTCENR</name>
+          <description>HSE-to-RTC clock enable register</description>
+          <addressOffset>0xDC</addressOffset>
+        </register>
+        <register>
+          <name>RSTSTAT</name>
+          <description>Reset status register</description>
+          <addressOffset>0x100</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral>
+      <name>CACHE</name>
+      <description>Flash cache control (holds the flash wait-state configuration)</description>
+      <baseAddress>0x40015400</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>CR</name>
+          <description>Cache control register</description>
+          <addressOffset>0x00</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral>
+      <name>SFM</name>
+      <description>Special function macro. Also holds the USB PHY port control registers (USBPCON enables the USB transceiver).</description>
+      <baseAddress>0x40014C00</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>CTRL</name>
+          <description>Control register</description>
+          <addressOffset>0x00</addressOffset>
+        </register>
+        <register>
+          <name>DATA</name>
+          <description>Input data register</description>
+          <addressOffset>0x04</addressOffset>
+        </register>
+        <register>
+          <dim>8</dim>
+          <dimIncrement>4</dimIncrement>
+          <name>DOUT[%s]</name>
+          <description>Result register</description>
+          <addressOffset>0x08</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>USBPCON</name>
+          <description>USB port control register</description>
+          <addressOffset>0x40</addressOffset>
+        </register>
+        <register>
+          <name>USBPSDCSR</name>
+          <description>USB port state detect control/status register</description>
+          <addressOffset>0x44</addressOffset>
+        </register>
+        <register>
+          <name>USBPSTAT</name>
+          <description>USB port status register</description>
+          <addressOffset>0x48</addressOffset>
+          <access>read-only</access>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral>
+      <name>TIM1</name>
+      <description>Advanced-control timer</description>
+      <baseAddress>0x40001C00</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>CR1</name>
+          <description>Control register 1</description>
+          <addressOffset>0x00</addressOffset>
+        </register>
+        <register>
+          <name>CR2</name>
+          <description>Control register 2</description>
+          <addressOffset>0x04</addressOffset>
+        </register>
+        <register>
+          <name>SMCR</name>
+          <description>Slave mode control register</description>
+          <addressOffset>0x08</addressOffset>
+        </register>
+        <register>
+          <name>DIER</name>
+          <description>DMA/interrupt enable register</description>
+          <addressOffset>0x0C</addressOffset>
+        </register>
+        <register>
+          <name>SR</name>
+          <description>Status register</description>
+          <addressOffset>0x10</addressOffset>
+        </register>
+        <register>
+          <name>EGR</name>
+          <description>Event generation register</description>
+          <addressOffset>0x14</addressOffset>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>CCMR1</name>
+          <description>Capture/compare mode register 1</description>
+          <addressOffset>0x18</addressOffset>
+        </register>
+        <register>
+          <name>CCMR2</name>
+          <description>Capture/compare mode register 2</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>CCER</name>
+          <description>Capture/compare enable register</description>
+          <addressOffset>0x20</addressOffset>
+        </register>
+        <register>
+          <name>CNT</name>
+          <description>Counter</description>
+          <addressOffset>0x24</addressOffset>
+        </register>
+        <register>
+          <name>PSC</name>
+          <description>Prescaler</description>
+          <addressOffset>0x28</addressOffset>
+        </register>
+        <register>
+          <name>ARR</name>
+          <description>Auto-reload register</description>
+          <addressOffset>0x2C</addressOffset>
+        </register>
+        <register>
+          <name>RCR</name>
+          <description>Repetition counter register</description>
+          <addressOffset>0x30</addressOffset>
+        </register>
+        <register>
+          <name>CCR1</name>
+          <description>Capture/compare register 1</description>
+          <addressOffset>0x34</addressOffset>
+        </register>
+        <register>
+          <name>CCR2</name>
+          <description>Capture/compare register 2</description>
+          <addressOffset>0x38</addressOffset>
+        </register>
+        <register>
+          <name>CCR3</name>
+          <description>Capture/compare register 3</description>
+          <addressOffset>0x3C</addressOffset>
+        </register>
+        <register>
+          <name>CCR4</name>
+          <description>Capture/compare register 4</description>
+          <addressOffset>0x40</addressOffset>
+        </register>
+        <register>
+          <name>BDTR</name>
+          <description>Break and dead-time register</description>
+          <addressOffset>0x44</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral derivedFrom="TIM1">
+      <name>TIM2</name>
+      <description>General-purpose timer 2</description>
+      <baseAddress>0x40002000</baseAddress>
+    </peripheral>
+
+    <peripheral derivedFrom="TIM1">
+      <name>TIM3</name>
+      <description>General-purpose timer 3</description>
+      <baseAddress>0x40002400</baseAddress>
+    </peripheral>
+
+    <peripheral derivedFrom="TIM1">
+      <name>TIM4</name>
+      <description>General-purpose timer 4</description>
+      <baseAddress>0x40002800</baseAddress>
+    </peripheral>
+
+    <peripheral>
+      <name>SPIM2</name>
+      <description>Serial peripheral interface master 2</description>
+      <baseAddress>0x40009000</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>CR0</name>
+          <description>Control register 0</description>
+          <addressOffset>0x00</addressOffset>
+        </register>
+        <register>
+          <name>CR1</name>
+          <description>Control register 1</description>
+          <addressOffset>0x04</addressOffset>
+        </register>
+        <register>
+          <name>SPIENR</name>
+          <description>SPI enable register</description>
+          <addressOffset>0x08</addressOffset>
+        </register>
+        <register>
+          <name>MWCR</name>
+          <description>Microwire control register</description>
+          <addressOffset>0x0C</addressOffset>
+        </register>
+        <register>
+          <name>SER</name>
+          <description>Slave enable register</description>
+          <addressOffset>0x10</addressOffset>
+        </register>
+        <register>
+          <name>BAUDR</name>
+          <description>Baud rate select</description>
+          <addressOffset>0x14</addressOffset>
+        </register>
+        <register>
+          <name>TXFTLR</name>
+          <description>Transmit FIFO threshold level</description>
+          <addressOffset>0x18</addressOffset>
+        </register>
+        <register>
+          <name>RXFTLR</name>
+          <description>Receive FIFO threshold level</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>TXFLR</name>
+          <description>Transmit FIFO level register</description>
+          <addressOffset>0x20</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>RXFLR</name>
+          <description>Receive FIFO level register</description>
+          <addressOffset>0x24</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>SR</name>
+          <description>Status register</description>
+          <addressOffset>0x28</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>IER</name>
+          <description>Interrupt enable register</description>
+          <addressOffset>0x2C</addressOffset>
+        </register>
+        <register>
+          <name>ISR</name>
+          <description>Interrupt status register</description>
+          <addressOffset>0x30</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>RISR</name>
+          <description>Raw interrupt status register</description>
+          <addressOffset>0x34</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>TXOICR</name>
+          <description>Transmit FIFO overflow interrupt clear register</description>
+          <addressOffset>0x38</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>RXOICR</name>
+          <description>Receive FIFO overflow interrupt clear register</description>
+          <addressOffset>0x3C</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>RXUICR</name>
+          <description>Receive FIFO underflow interrupt clear register</description>
+          <addressOffset>0x40</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>MSTICR</name>
+          <description>Multi-master interrupt clear register</description>
+          <addressOffset>0x44</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>ICR</name>
+          <description>Interrupt clear register</description>
+          <addressOffset>0x48</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>DMACR</name>
+          <description>DMA control register</description>
+          <addressOffset>0x4C</addressOffset>
+        </register>
+        <register>
+          <name>DMATDLR</name>
+          <description>DMA transmit data level</description>
+          <addressOffset>0x50</addressOffset>
+        </register>
+        <register>
+          <name>DMARDLR</name>
+          <description>DMA receive data level</description>
+          <addressOffset>0x54</addressOffset>
+        </register>
+        <register>
+          <name>DR</name>
+          <description>Data register</description>
+          <addressOffset>0x60</addressOffset>
+        </register>
+        <register>
+          <name>RX_SAMPLE_DLY</name>
+          <description>RX sample delay register</description>
+          <addressOffset>0xF0</addressOffset>
+        </register>
+        <register>
+          <name>ESPICR</name>
+          <description>Enhanced SPI control register</description>
+          <addressOffset>0xF4</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral derivedFrom="SPIM2">
+      <name>QSPI</name>
+      <description>Quad serial peripheral interface</description>
+      <baseAddress>0x40003000</baseAddress>
+    </peripheral>
+
+    <peripheral derivedFrom="SPIM2">
+      <name>SPIS1</name>
+      <description>Serial peripheral interface slave 1</description>
+      <baseAddress>0x40003400</baseAddress>
+    </peripheral>
+
+    <peripheral derivedFrom="SPIM2">
+      <name>SPIS2</name>
+      <description>Serial peripheral interface slave 2</description>
+      <baseAddress>0x40009400</baseAddress>
+    </peripheral>
+
+    <peripheral>
+      <name>UART3</name>
+      <description>Universal asynchronous receiver/transmitter 3</description>
+      <baseAddress>0x40008400</baseAddress>
+      <addressBlock>
+        <offset>0x0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+      <registers>
+        <register>
+          <name>RBR</name>
+          <description>Receive buffer register</description>
+          <addressOffset>0x00</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>THR</name>
+          <description>Transmit holding register</description>
+          <addressOffset>0x00</addressOffset>
+          <alternateRegister>RBR</alternateRegister>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DLL</name>
+          <description>Divisor latch (low)</description>
+          <addressOffset>0x00</addressOffset>
+          <alternateRegister>RBR</alternateRegister>
+        </register>
+        <register>
+          <name>DLH</name>
+          <description>Divisor latch (high)</description>
+          <addressOffset>0x04</addressOffset>
+        </register>
+        <register>
+          <name>IER</name>
+          <description>Interrupt enable register</description>
+          <addressOffset>0x04</addressOffset>
+          <alternateRegister>DLH</alternateRegister>
+        </register>
+        <register>
+          <name>IIR</name>
+          <description>Interrupt identification register</description>
+          <addressOffset>0x08</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>FCR</name>
+          <description>FIFO control register</description>
+          <addressOffset>0x08</addressOffset>
+          <alternateRegister>IIR</alternateRegister>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>LCR</name>
+          <description>Line control register</description>
+          <addressOffset>0x0C</addressOffset>
+        </register>
+        <register>
+          <name>MCR</name>
+          <description>Modem control register</description>
+          <addressOffset>0x10</addressOffset>
+        </register>
+        <register>
+          <name>LSR</name>
+          <description>Line status register</description>
+          <addressOffset>0x14</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>MSR</name>
+          <description>Modem status register</description>
+          <addressOffset>0x18</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>SCR</name>
+          <description>Scratchpad register</description>
+          <addressOffset>0x1C</addressOffset>
+        </register>
+        <register>
+          <name>USR</name>
+          <description>UART status register</description>
+          <addressOffset>0x7C</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>TFL</name>
+          <description>Transmit FIFO level</description>
+          <addressOffset>0x80</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>RFL</name>
+          <description>Receive FIFO level</description>
+          <addressOffset>0x84</addressOffset>
+          <access>read-only</access>
+        </register>
+        <register>
+          <name>SRR</name>
+          <description>Software reset register</description>
+          <addressOffset>0x88</addressOffset>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>SRTS</name>
+          <description>Shadow request to send</description>
+          <addressOffset>0x8C</addressOffset>
+        </register>
+        <register>
+          <name>SBCR</name>
+          <description>Shadow break control register</description>
+          <addressOffset>0x90</addressOffset>
+        </register>
+        <register>
+          <name>SFE</name>
+          <description>Shadow FIFO enable</description>
+          <addressOffset>0x98</addressOffset>
+        </register>
+        <register>
+          <name>SRT</name>
+          <description>Shadow RCVR trigger</description>
+          <addressOffset>0x9C</addressOffset>
+        </register>
+        <register>
+          <name>STET</name>
+          <description>Shadow TX empty trigger</description>
+          <addressOffset>0xA0</addressOffset>
+        </register>
+        <register>
+          <name>HTX</name>
+          <description>Halt TX</description>
+          <addressOffset>0xA4</addressOffset>
+        </register>
+        <register>
+          <name>DMASA</name>
+          <description>DMA software acknowledge</description>
+          <addressOffset>0xA8</addressOffset>
+          <access>write-only</access>
+        </register>
+        <register>
+          <name>DLF</name>
+          <description>Divisor latch fractional value</description>
+          <addressOffset>0xC0</addressOffset>
+        </register>
+        <register>
+          <name>RAR</name>
+          <description>Receive address register</description>
+          <addressOffset>0xC4</addressOffset>
+        </register>
+        <register>
+          <name>TAR</name>
+          <description>Transmit address register</description>
+          <addressOffset>0xC8</addressOffset>
+        </register>
+        <register>
+          <name>EXTLCR</name>
+          <description>Line extended control register</description>
+          <addressOffset>0xCC</addressOffset>
+        </register>
+      </registers>
+    </peripheral>
+
+    <peripheral derivedFrom="UART3">
+      <name>UART1</name>
+      <description>Universal asynchronous receiver/transmitter 1</description>
+      <baseAddress>0x40003800</baseAddress>
+    </peripheral>
+
+    <peripheral derivedFrom="UART3">
+      <name>UART2</name>
+      <description>Universal asynchronous receiver/transmitter 2</description>
+      <baseAddress>0x40008000</baseAddress>
+    </peripheral>
+
+  </peripherals>
+</device>

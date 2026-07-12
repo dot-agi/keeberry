@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Grants the main window the core defaults, including the event permission the kcp bridge needs so the webview can listen() for inbound HID reports. The hid_* commands are app-local and accessible by default.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

@@ -1,0 +1,44 @@
+# Firmware (Rust) build artifacts
+/firmware/target/
+**/target
+*.rs.bk
+Cargo.lock.bak
+
+# Firmware build / flash outputs
+*.bin
+*.hex
+*.elf
+*.uf2
+
+# Native app: the firmware image + version stamp are staged from a firmware
+# build (app/scripts/stage-firmware.mjs). They are build artifacts — never
+# commit them, so the bundle can never ship a stale image or version.
+/app/src-tauri/resources/keeberry.bin
+/app/src-tauri/resources/firmware.json
+
+# App (Node / Vite / Vercel)
+/app/node_modules/
+/app/dist/
+/app/.vercel/
+
+# Local working notes (not part of the codebase)
+/.planning/
+/.research/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# Python bytecode cache (from running the vendored coc generator)
+__pycache__/
+*.pyc
+.vercel
+
+# cmux per-feature worktrees (never commit)
+.worktrees/
+
+# cmux SDK build worktrees (never commit)
+.claude/worktrees/

@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+[package]
+name = "xtask"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-2.0-or-later"
+description = "keeberry project automation — the `just new-feature` scaffolder"
+publish = false
+
+# A standalone workspace, deliberately NOT a member of the firmware workspace: that
+# workspace's `.cargo/config.toml` forces `target = thumbv7m-none-eabi`, which would try
+# to cross-compile this host tool for the MCU. An empty `[workspace]` makes this crate its
+# own root so cargo never absorbs it into a parent.
+[workspace]
+
+[[bin]]
+name = "xtask"
+path = "src/main.rs"
+
+# No dependencies on purpose: a hermetic, std-only host tool with hand-rolled argument
+# parsing builds in a second and fetches nothing, so the scaffolder always runs offline.
+[dependencies]

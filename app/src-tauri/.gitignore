@@ -1,0 +1,2 @@
+# Tauri regenerates these ACL schema files on every build.
+/gen/schemas

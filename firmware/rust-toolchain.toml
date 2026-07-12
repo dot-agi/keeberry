@@ -1,0 +1,5 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+[toolchain]
+channel = "stable"
+components = ["rust-src", "llvm-tools"]
+targets = ["thumbv7m-none-eabi"]

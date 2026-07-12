@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: GPL-2.0-or-later
+[package]
+name = "pac"
+version = "0.1.0"
+edition = "2021"
+license = "GPL-2.0-or-later"
+description = "Peripheral access crate for the Westberry WB32FQ95 (ARM Cortex-M3)"
+repository = "https://github.com/keeberry/keeberry"
+categories = ["embedded", "no-std", "hardware-support"]
+readme = false
+
+[dependencies]
+cortex-m = "0.7"
+vcell = "0.1"
+cortex-m-rt = { version = "0.7", optional = true }
+critical-section = { version = "1.0", optional = true }
+
+[features]
+rt = ["cortex-m-rt"]
+critical-section = ["dep:critical-section", "cortex-m/critical-section-single-core"]

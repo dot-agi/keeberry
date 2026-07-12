@@ -1,0 +1,32 @@
+keeberry bundles the following third-party flasher as a Tauri `externalBin`
+sidecar (see tauri.conf.json `bundle.externalBin`):
+
+  wb32-dfu-updater_cli
+  Upstream: https://github.com/WestberryTech/wb32-dfu-updater
+  License:  Apache-2.0
+
+  The committed binary `wb32-dfu-updater_cli-<target-triple>` is the Homebrew
+  build (`/opt/homebrew/bin/wb32-dfu-updater_cli`). A copy of the Apache-2.0
+  license text is required in any redistributed bundle; obtain it from the
+  upstream repository.
+
+PACKAGING FOLLOW-UP — libusb (REQUIRED before shipping a distributable .app)
+
+  `otool -L` on the sidecar reports a non-portable dynamic dependency:
+
+    /opt/homebrew/opt/libusb/lib/libusb-1.0.0.dylib   (Homebrew, absolute path)
+    /usr/lib/libSystem.B.dylib                        (system, fine)
+
+  The libusb path resolves only on a machine that has Homebrew's libusb
+  installed, so the sidecar will fail to launch from a bundle on a clean Mac.
+  Before distribution, ONE of the following must be done (not yet done here):
+
+    1. Bundle the dylib: copy libusb-1.0.0.dylib into the app bundle (e.g.
+       Contents/Frameworks) and rewrite the sidecar's load command with
+       `install_name_tool -change <abs path> @executable_path/../Frameworks/...`
+       (and re-sign), or
+    2. Ship a statically-linked `wb32-dfu-updater_cli` (no libusb dylib dep).
+
+  This is a real macOS packaging step. The sidecar runs as-is on a dev machine
+  that has `brew install libusb`; the bundling/static-link work is tracked here
+  so it is not mistaken for complete.
